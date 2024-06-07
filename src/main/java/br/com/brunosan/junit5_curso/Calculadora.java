@@ -6,6 +6,10 @@ public class Calculadora {
         return a + b;
     }
     
+    public float divisao(int numerador, int denominador) {
+        return (float) numerador / denominador;
+    }
+    
     public static void main(String[] args) {
         Calculadora calculadora = new Calculadora();
         
