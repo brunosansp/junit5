@@ -59,13 +59,26 @@ class UsuarioTest {
     }
     
     @Test
-    void deveRetornarExceçãoSeUsuarioSemNome() {
-        assertThrows(ValidationException.class,
+    void deveRetornarExcecaoSeUsuarioSemNome() {
+        ValidationException ex = assertThrows(ValidationException.class,
             () -> umUsuario().comNome(null).agora()
         );
+        assertEquals("Nome é obrigatório", ex.getMessage());
     }
     
-    private Usuario populateUsuario() {
-        return new Usuario(1L, "Usuario Valido", "user@email.com", "123456");
+    @Test
+    void deveRetornarExcecaoSeUsuarioSemEmail() {
+        ValidationException ex = assertThrows(ValidationException.class,
+            () -> umUsuario().comEmail(null).agora()
+        );
+        assertEquals("Email é obrigatório", ex.getMessage());
+    }
+    
+    @Test
+    void deveRetornarExcecaoSeUsuarioSemSenha() {
+        ValidationException ex = assertThrows(ValidationException.class,
+            () -> umUsuario().comSenha(null).agora()
+        );
+        assertEquals("Senha é obrigatória", ex.getMessage());
     }
 }
