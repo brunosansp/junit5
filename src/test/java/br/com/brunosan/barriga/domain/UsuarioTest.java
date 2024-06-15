@@ -1,12 +1,15 @@
 package br.com.brunosan.barriga.domain;
 
+import br.com.brunosan.barriga.domain.exceptions.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static br.com.brunosan.barriga.domain.builders.UsuarioBuilder.umUsuario;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("Testing the Dominio::Usuario class")
 class UsuarioTest {
@@ -21,7 +24,7 @@ class UsuarioTest {
     @Test
     @DisplayName("Deve criar um usuário válido")
     void deveCriarUsuarioValido() {
-        Usuario usuarioValido = new Usuario(1L, "Usuario Valido", "user@email.com", "123456");
+        Usuario usuarioValido = umUsuario().agora();
         assertNotNull(usuarioValido);
     }
     
@@ -52,6 +55,13 @@ class UsuarioTest {
             () -> assertEquals("Usuario Valido", usuario.getNome()),
             () -> assertEquals("user@email.com", usuario.getEmail()),
             () -> assertEquals("123456", usuario.getSenha())
+        );
+    }
+    
+    @Test
+    void deveRetornarExceçãoSeUsuarioSemNome() {
+        assertThrows(ValidationException.class,
+            () -> umUsuario().comNome(null).agora()
         );
     }
     
