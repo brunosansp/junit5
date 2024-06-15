@@ -18,7 +18,7 @@ class UsuarioTest {
     
     @BeforeEach
     void init() {
-        usuario = populateUsuario();
+        usuario = umUsuario().agora();
     }
     
     @Test
@@ -35,7 +35,7 @@ class UsuarioTest {
     
     @Test
     void getNome() {
-        assertEquals("Usuario Valido", usuario.getNome());
+        assertEquals("Usuário Válido", usuario.getNome());
     }
     
     @Test
@@ -45,16 +45,16 @@ class UsuarioTest {
     
     @Test
     void getSenha() {
-        assertEquals("123456", usuario.getSenha());
+        assertEquals("12345678", usuario.getSenha());
     }
     
     @Test
     void exemploTesteAllAssertionWithLambda() {
         assertAll("Usuario",
             () -> assertEquals(1L, usuario.getId()),
-            () -> assertEquals("Usuario Valido", usuario.getNome()),
+            () -> assertEquals("Usuário Válido", usuario.getNome()),
             () -> assertEquals("user@email.com", usuario.getEmail()),
-            () -> assertEquals("123456", usuario.getSenha())
+            () -> assertEquals("12345678", usuario.getSenha())
         );
     }
     
