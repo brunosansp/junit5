@@ -5,6 +5,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -62,7 +64,7 @@ class CalculadoraTest {
         System.out.println(++contador);
         float result = calculadora.divisao(10, 3);
         assertEquals(3.3333332538604736, result);
-        assertEquals(3.33, result, 0.01);
+        assertEquals(3.33, result, 0.01); // o valor delta funciona como margem de erro entre o resultado e o esperado
     }
     
     @Test
@@ -81,5 +83,17 @@ class CalculadoraTest {
             float result = 10 / 0;
         });
         assertEquals("/ by zero", arithmeticException.getMessage());
+    }
+    
+    @ParameterizedTest
+    @CsvSource(value = {
+        "6, 2, 3",
+        "6, -2, -3",
+        "10, 3, 3.3333332538604736",
+        "0, 2, 0"
+    })
+    void deveDividirCorretamente(int numerador, int denominador, double resultado) {
+        float result = calculadora.divisao(numerador, denominador);
+        assertEquals(resultado, result);
     }
 }

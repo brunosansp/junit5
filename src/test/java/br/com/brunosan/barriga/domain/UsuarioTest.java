@@ -4,6 +4,10 @@ import br.com.brunosan.barriga.domain.exceptions.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static br.com.brunosan.barriga.domain.builders.UsuarioBuilder.umUsuario;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -80,5 +84,35 @@ class UsuarioTest {
             () -> umUsuario().comSenha(null).agora()
         );
         assertEquals("Senha é obrigatória", ex.getMessage());
+    }
+    
+    @ParameterizedTest
+    @ValueSource(strings = {"Teste1", "Teste3", "Teste3"})
+    void testStrings(String param) {
+        System.out.println(param);
+        assertNotNull(param);
+    }
+    
+    @ParameterizedTest
+    @NullSource
+    void deveRetornarExcecaoSeUsuarioComDadosInvalidos(String param) {
+        assertAll(
+            () -> assertThrows(ValidationException.class, () -> umUsuario().comNome(param).agora()),
+            () -> assertThrows(ValidationException.class, () -> umUsuario().comEmail(param).agora()),
+            () -> assertThrows(ValidationException.class, () -> umUsuario().comSenha(param).agora())
+        );
+    }
+    
+    @ParameterizedTest(name = "[index] - {4}")
+    @CsvSource(value = {
+        "1, NULL, email@mail.com, 123456, Nome é obrigatório",
+        "1, Nome Usuário, NULL, 123456, Email é obrigatório",
+        "1, Nome Usuário, email@mail.com, NULL, Senha é obrigatória"
+    }, nullValues = "NULL")
+    void deveValidarCamposObrigatorios(Long id, String nome, String email, String senha, String mensagem) {
+        ValidationException ex = assertThrows(ValidationException.class,
+            () -> umUsuario().comId(id).comNome(nome).comEmail(email).comSenha(senha).agora()
+        );
+        assertEquals(mensagem, ex.getMessage());
     }
 }
