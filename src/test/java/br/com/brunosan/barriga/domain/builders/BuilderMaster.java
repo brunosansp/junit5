@@ -1,5 +1,6 @@
 package br.com.brunosan.barriga.domain.builders;
 
+import br.com.brunosan.barriga.domain.Conta;
 import br.com.brunosan.barriga.domain.Usuario;
 
 import java.lang.reflect.Field;
@@ -136,6 +137,6 @@ public class BuilderMaster {
     
     public static void main(String[] args) {
         BuilderMaster master = new BuilderMaster();
-        master.gerarCodigoClasse(Usuario.class);
+        master.gerarCodigoClasse(Conta.class);
     }
 }
