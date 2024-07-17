@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -103,13 +104,31 @@ class UsuarioTest {
         );
     }
     
-    @ParameterizedTest(name = "[index] - {4}")
+    @ParameterizedTest(name = "[{index}] - {4}")
     @CsvSource(value = {
         "1, NULL, email@mail.com, 123456, Nome é obrigatório",
         "1, Nome Usuário, NULL, 123456, Email é obrigatório",
         "1, Nome Usuário, email@mail.com, NULL, Senha é obrigatória"
     }, nullValues = "NULL")
     void deveValidarCamposObrigatorios(Long id, String nome, String email, String senha, String mensagem) {
+        ValidationException ex = assertThrows(ValidationException.class,
+            () -> umUsuario().comId(id).comNome(nome).comEmail(email).comSenha(senha).agora()
+        );
+        assertEquals(mensagem, ex.getMessage());
+    }
+    
+    @ParameterizedTest(name = "[{index}] - {4}")
+    @CsvFileSource(files = "src/test/resources/camposObrigatoriosUsuario.csv", nullValues = "NULL", numLinesToSkip = 1)
+    void deveValidarCamposObrigatoriosUsandoArquivoCSV(Long id, String nome, String email, String senha, String mensagem) {
+        ValidationException ex = assertThrows(ValidationException.class,
+            () -> umUsuario().comId(id).comNome(nome).comEmail(email).comSenha(senha).agora()
+        );
+        assertEquals(mensagem, ex.getMessage());
+    }
+    
+    @ParameterizedTest(name = "[{index}] - {4}")
+    @CsvFileSource(files = "src/test/resources/camposObrigatoriosUsuario.csv", nullValues = "NULL", useHeadersInDisplayName = true)
+    void deveValidarCamposObrigatoriosUsandoArquivoCSVComHeadersInDisplay(Long id, String nome, String email, String senha, String mensagem) {
         ValidationException ex = assertThrows(ValidationException.class,
             () -> umUsuario().comId(id).comNome(nome).comEmail(email).comSenha(senha).agora()
         );
